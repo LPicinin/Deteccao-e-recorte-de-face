@@ -17,8 +17,9 @@ def load_images_from_folder(folder):
     return images
 
 
-dpai, aux0, aux = os.walk(dirPai)
+dpai, aux0, aux1, aux2, aux3 = os.walk(dirPai)
 subDir = dpai[1]
+imgMarcadas = []
 
 for i in range(len(subDir)):
     #carrega todas as imagens da pasta em um vetor
@@ -26,11 +27,11 @@ for i in range(len(subDir)):
     for y in range(len(images)):
         imagem_cinza = cv2.cvtColor(images[y], cv2.COLOR_BGR2GRAY)
         faces = face_cascade.detectMultiScale(imagem_cinza, 1.1, 3)
-        if(faces is not None):
+        '''if(faces is not None):
             for (x, y, w, h) in faces:
-                cv2.rectangle(imagem_cinza, (x, y), (x + w, y + h), (255, 0, 0), 2)
+                cv2.rectangle(imagem_cinza, (x, y), (x + w, y + h), (255, 0, 0), 2)'''
         facecnt = len(faces)
-        print("Detected faces: %d" % facecnt)
+        print("Faces Detectadas: %d" % facecnt)
         i = 0
         height, width = imagem_cinza.shape[:2]
 
@@ -43,8 +44,10 @@ for i in range(len(subDir)):
             nr = int(r * 2)
 
             faceimg = imagem_cinza[ny:ny + nr, nx:nx + nr]
-            lastimg = cv2.resize(faceimg, (32, 32))
+            lastimg = cv2.resize(faceimg, (64, 64))
+            imgMarcadas.append(lastimg);
             i += 1
-            cv2.imwrite(dirResult+"/image%d.jpg" % i, lastimg)
+for i in range(len(imgMarcadas)):
+    cv2.imwrite(dirResult + "/image%d.jpg" % i, imgMarcadas[i])
 
 print(str(len(subDir)))
